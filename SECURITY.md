@@ -15,7 +15,7 @@ Please do not open a public issue for security problems.
 Send a private report to:
 
 ```text
-your-email@example.com
+rfmakito@163.com
 ```
 
 Include:
