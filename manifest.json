@@ -1,0 +1,10 @@
+{
+  "id": "visual-media-layout",
+  "name": "Visual Media Layout",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Visual layout blocks for images and videos in Obsidian.",
+  "author": "Suji",
+  "authorUrl": "",
+  "isDesktopOnly": false
+}

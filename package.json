@@ -1,0 +1,28 @@
+{
+  "name": "visual-media-layout",
+  "version": "0.1.0",
+  "description": "An Obsidian plugin for visual image and video layout blocks.",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "dev": "node esbuild.config.mjs --watch",
+    "release": "npm run build && node scripts/prepare-release.mjs",
+    "test": "node --test"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "media",
+    "layout"
+  ],
+  "author": "Suji",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "builtin-modules": "^5.0.0",
+    "esbuild": "^0.25.0",
+    "obsidian": "^1.8.7",
+    "typescript": "^5.8.0"
+  }
+}
