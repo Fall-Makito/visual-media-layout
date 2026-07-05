@@ -219,3 +219,23 @@ test("restores visual media layout blocks to native media", () => {
   assert.match(restored.content, /!\[\[cat\.png\]\]/);
   assert.match(restored.content, /!\[\[demo\.mp4\]\]/);
 });
+
+test("restore prefers native fallback links when fallback and layout JSON disagree", () => {
+  const layout = parseMarkdownMediaToLayout("![[old/cat.png]]");
+  assert.ok(layout);
+  const content = [
+    "# Note",
+    serializeVisualMediaLayoutBlock(layout),
+    "",
+    NATIVE_FALLBACK_START,
+    "![[new/cat.png]]",
+    NATIVE_FALLBACK_END,
+  ].join("\n");
+
+  const restored = restoreLayoutsInContent(content);
+
+  assert.equal(restored.count, 1);
+  assert.match(restored.content, /!\[\[new\/cat\.png\]\]/);
+  assert.doesNotMatch(restored.content, /!\[\[old\/cat\.png\]\]/);
+  assert.doesNotMatch(restored.content, new RegExp(NATIVE_FALLBACK_START));
+});
