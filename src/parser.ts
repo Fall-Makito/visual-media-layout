@@ -95,10 +95,15 @@ function normalizeVisualMediaLayout(value: unknown): VisualMediaLayout | null {
     }
   }
 
-  return {
+  const layout: VisualMediaLayout = {
     version: 1,
     rows: ensureUniqueLayoutIds(rows),
   };
+  if (value.nativeFallback === true) {
+    layout.nativeFallback = true;
+  }
+
+  return layout;
 }
 
 function normalizeVisualMediaRow(value: unknown): VisualMediaRow | null {

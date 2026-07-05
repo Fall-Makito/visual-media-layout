@@ -8,6 +8,11 @@ interface RestoreResult {
   count: number;
 }
 
+interface NativeFallbackBlock {
+  endLine: number;
+  mediaLines: string[];
+}
+
 export async function restoreCurrentNoteLayoutsToNativeMedia(app: App): Promise<number> {
   const file = app.workspace.getActiveFile();
   if (!file) {
@@ -65,12 +70,13 @@ export function restoreLayoutsInContent(content: string): RestoreResult {
       continue;
     }
 
-    const nativeMedia = serializeNativeMedia(layout);
+    const nativeFallback = findNativeFallbackBlock(lines, endLine);
+    const nativeMedia = nativeFallback?.mediaLines.join("\n").trim() || serializeNativeMedia(layout);
     if (nativeMedia) {
       output.push(...nativeMedia.split("\n"));
     }
     restoredCount += 1;
-    line = skipNativeFallbackLines(lines, endLine);
+    line = nativeFallback?.endLine ?? endLine;
   }
 
   return {
@@ -89,23 +95,26 @@ function findFenceEndLine(lines: string[], startLine: number): number | null {
   return null;
 }
 
-function skipNativeFallbackLines(lines: string[], codeBlockEndLine: number): number {
+function findNativeFallbackBlock(lines: string[], codeBlockEndLine: number): NativeFallbackBlock | null {
   let line = codeBlockEndLine + 1;
   while (line < lines.length && lines[line]?.trim() === "") {
     line += 1;
   }
 
   if (lines[line]?.trim() !== NATIVE_FALLBACK_START) {
-    return codeBlockEndLine;
+    return null;
   }
 
   for (let fallbackLine = line + 1; fallbackLine < lines.length; fallbackLine += 1) {
     if (lines[fallbackLine]?.trim() === NATIVE_FALLBACK_END) {
-      return fallbackLine;
+      return {
+        endLine: fallbackLine,
+        mediaLines: lines.slice(line + 1, fallbackLine),
+      };
     }
   }
 
-  return codeBlockEndLine;
+  return null;
 }
 
 function collapseExtraBlankLines(content: string): string {

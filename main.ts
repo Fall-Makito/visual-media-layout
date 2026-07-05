@@ -2,6 +2,7 @@ import { Notice, Plugin } from "obsidian";
 
 import { registerAutoConvert } from "./src/autoConvert";
 import { registerVisualMediaCommands } from "./src/commands";
+import { registerMediaLinkMaintenance } from "./src/linkMaintenance";
 import { renderVisualMediaLayout } from "./src/renderer";
 
 export interface VisualMediaLayoutSettings {
@@ -34,6 +35,7 @@ export default class VisualMediaLayoutPlugin extends Plugin {
       disableAutoConvert: () => this.setAutoConvertEnabled(false),
       enableAutoConvert: () => this.setAutoConvertEnabled(true),
     });
+    registerMediaLinkMaintenance(this);
     registerAutoConvert(this, () => this.settings.autoConvertEnabled);
     console.log("Visual Media Layout loaded");
   }
